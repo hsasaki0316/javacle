@@ -142,7 +142,7 @@ public class ConditionUtilTest {
   }
 
   @Test
-  public void testCoalesce_firstAndFirstValueNull() {
+  public void testCoalesce_firstAndSecondValueNull() {
     String value1 = null;
     String value2 = null;
     String value3 = "universe";
