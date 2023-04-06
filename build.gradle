@@ -10,6 +10,8 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
     id 'eclipse'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
 }
 
 repositories {
@@ -22,12 +24,73 @@ jar {
     version = '1.0.0'
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+group = "net.hsasaki0316"
+archivesBaseName = "javacle"
+version = "1.0.0"
+
 dependencies {
-    // Use JUnit test framework.
     testImplementation 'junit:junit:4.13.2'
 }
 
-//application {
-    //// Define the main class for the application.
-    //mainClass = 'net.hsasaki0316.App'
-//}
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'javacle'
+        packaging 'jar'
+        // optionally artifactId can be defined here
+        description 'We created this library to use Oracle DB conditional functions in Java.'
+        url 'https://github.com/hsasaki0316/javacle'
+
+        scm {
+          connection 'scm:https://github.com/hsasaki0316/javacle.git'
+          developerConnection 'scm:https://github.com/hsasaki0316/javacle.git'
+          url 'https://github.com/hsasaki0316/javacle.git
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'hsasaki0316'
+            name 'hiroyuki.sasaki'
+            email 'hsasaki2424@gmail.com'
+          }
+        }
+      }
+    }
+  }
+}
