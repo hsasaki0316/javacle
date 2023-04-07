@@ -73,7 +73,7 @@ uploadArchives {
         scm {
           connection 'scm:https://github.com/hsasaki0316/javacle.git'
           developerConnection 'scm:https://github.com/hsasaki0316/javacle.git'
-          url 'https://github.com/hsasaki0316/javacle
+          url 'https://github.com/hsasaki0316/javacle'
         }
 
         licenses {
